@@ -27,8 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace _02_shape
 {
@@ -36,11 +35,12 @@ namespace _02_shape
     {
         abstract class Shape
         {
-            double Square { get; }
+            virtual public double Square { get; }
             virtual public void Print()
             {
-                Console.WriteLine($"{this.GetType().Name, 10}\tSquare: {Square}");
+                Console.WriteLine($"{this.GetType().Name,10}\tSquare: {Square}");
             }
+
         }
 
         class Circle : Shape
@@ -62,11 +62,11 @@ namespace _02_shape
                 }
             }
 
-            public double Square => pi * Radius * Radius;
+            public override double Square => pi * Radius * Radius;
 
-            override public void Print()
+            public override void Print()
             {
-                Console.WriteLine($"{this.GetType().Name, 10}\tSquare: {Square}");
+                Console.WriteLine($"{this.GetType().Name, 10}\tSquare: {Square}\t\tRadius: {Radius}");
             }
 
         }
@@ -82,7 +82,7 @@ namespace _02_shape
                 Height = h;
             }
 
-            double Width
+            public double Width
             {
                 get => width;
                 set
@@ -91,7 +91,7 @@ namespace _02_shape
                 }
             }
 
-            double Height
+            public double Height
             {
                 get => height;
                 set
@@ -100,38 +100,87 @@ namespace _02_shape
                 }
             }
 
-            public double Square => Width * Height;
+            public override double Square => Width * Height;
             
 
-            override public void Print()
+            public override void Print()
             {
-                Console.WriteLine($"{this.GetType().Name, 10}\tSquare: {Square}");
+                Console.WriteLine($"{this.GetType().Name, 10}\tSquare: {Square}\t\tH x W: {Height} x {Width}");
             }
 
         }
+
+        
 
         static void Main(string[] args)
         {
             List<Shape> shapes = new List<Shape>
             {
                 new Circle(1.5),
-                new Rectangle(2.5, 3),
+                new Rectangle(2.5, 4),
                 new Circle(2),
                 new Rectangle(4, 5),
                 new Circle(5),
                 new Rectangle(4.5, 6),
                 new Circle(2.7),
+                new Circle(1),
                 new Rectangle(5, 3),
             };
 
+            //Вивести інформацію про всі фігури
             foreach (Shape s in shapes)
                 s.Print();
-            //shapes.Sort((x, y) => x.Square.CompareTo(y.Square));
-            //animals.Sort((x, y) => x.age.CompareTo(y.age));
+
+            //Впорядкувати список фігур за зростанням площ фігур.
+            shapes.Sort((x, y) => x.Square.CompareTo(y.Square));
             Console.WriteLine("\n\tSort by Square");
             foreach (Shape s in shapes)
                 s.Print();
-            //shapes.FindAll(object);
+
+            //Зібрати фігури, що є колами  у окремий список(FindAll)
+            var circles = shapes.FindAll(x => x is Circle);
+            Console.WriteLine("\n\tOnly Circles");
+            foreach (Shape c in circles)
+                c.Print();
+
+            // вибрати всі фігури з площами від 10 до 20(2 способи: from..., метод Where())
+            var shapes_10_20 =
+                from s in shapes
+                where s.Square >= 10 && s.Square <= 20
+                select s;
+
+            Console.WriteLine("\n\tShapes with squares between 10 and 20 (from)");
+            foreach (Shape t in shapes_10_20)
+                t.Print();
+
+            var shapes_10_20_ = shapes.Where(x => x.Square >= 10 && x.Square <= 20); 
+            Console.WriteLine("\n\tShapes with squares between 10 and 20 (Where())");
+            foreach (Shape t in shapes_10_20_)
+                t.Print();
+
+            // знайти максимальну площу з прямокутників
+            var rectangles = shapes.FindAll(x => x is Rectangle);
+            Console.WriteLine("\nMax square of rectangle:\t{0}", rectangles.Max(x => x.Square));
+
+            // знайти кількість кругів з площею більше 10
+            var circles_10 = circles.Where(x => x.Square >= 10);
+            Console.WriteLine("\nQ-ty of circles with square > 10:\t{0}", circles_10.Count());
+
+            // вибрати прямокутники та круги, впорядкувати за зростанням площ
+            Console.WriteLine("\n\tSort by type/square");
+            var shapes2 = circles.Concat(rectangles);  // списки посортовані вище в інших завданнях
+            foreach (Shape s in shapes2)
+                s.Print();
+
+            // сформувати колекцію з висот прямокутників
+            Console.WriteLine("\n\tHeigths of rectangles");
+            var heights =
+               from h in shapes
+               where h is Rectangle
+               select ((Rectangle)h).Height;
+            int count = 0;
+            foreach (var h in heights)
+                Console.WriteLine("({0}) Height of rectangle:\t{1}",count++, h);
         }
     }
 }
