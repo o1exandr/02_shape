@@ -28,88 +28,88 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace _02_shape
 {
+    public abstract class Shape
+    {
+        virtual public double Square { get; }
+        virtual public void Print()
+        {
+            Console.WriteLine($"{this.GetType().Name,10}\tSquare: {Square}");
+        }
+
+    }
+
+    class Circle : Shape
+    {
+        double radius;
+        const double pi = 3.14;
+
+        public Circle(double r = 1)
+        {
+            Radius = r;
+        }
+
+        double Radius
+        {
+            get => radius;
+            set
+            {
+                radius = value;
+            }
+        }
+
+        public override double Square => pi * Radius * Radius;
+
+        public override void Print()
+        {
+            Console.WriteLine($"{this.GetType().Name,10}\tSquare: {Square}\t\tRadius: {Radius}");
+        }
+
+    }
+
+    public class Rectangle : Shape
+    {
+        double width;
+        double height;
+
+        public Rectangle(double w = 1, double h = 1)
+        {
+            Width = w;
+            Height = h;
+        }
+
+        public double Width
+        {
+            get => width;
+            set
+            {
+                width = value;
+            }
+        }
+
+        public double Height
+        {
+            get => height;
+            set
+            {
+                height = value;
+            }
+        }
+
+        public override double Square => Width * Height;
+
+
+        public override void Print()
+        {
+            Console.WriteLine($"{this.GetType().Name,10}\tSquare: {Square}\t\tH x W: {Height} x {Width}");
+        }
+
+    }
+
     class Program
     {
-        abstract class Shape
-        {
-            virtual public double Square { get; }
-            virtual public void Print()
-            {
-                Console.WriteLine($"{this.GetType().Name,10}\tSquare: {Square}");
-            }
-
-        }
-
-        class Circle : Shape
-        {
-            double radius;
-            const double pi = 3.14;
-
-            public Circle(double r = 1)
-            {
-                Radius = r;
-            }
-
-            double Radius
-            {
-                get => radius;
-                set
-                {
-                    radius = value;
-                }
-            }
-
-            public override double Square => pi * Radius * Radius;
-
-            public override void Print()
-            {
-                Console.WriteLine($"{this.GetType().Name, 10}\tSquare: {Square}\t\tRadius: {Radius}");
-            }
-
-        }
-
-        class Rectangle : Shape
-        {
-            double width;
-            double height;
-
-            public Rectangle(double w = 1, double h = 1)
-            {
-                Width = w;
-                Height = h;
-            }
-
-            public double Width
-            {
-                get => width;
-                set
-                {
-                    width = value;
-                }
-            }
-
-            public double Height
-            {
-                get => height;
-                set
-                {
-                    height = value;
-                }
-            }
-
-            public override double Square => Width * Height;
-            
-
-            public override void Print()
-            {
-                Console.WriteLine($"{this.GetType().Name, 10}\tSquare: {Square}\t\tH x W: {Height} x {Width}");
-            }
-
-        }
-
+        
         
 
         static void Main(string[] args)
@@ -181,6 +181,8 @@ namespace _02_shape
             int count = 0;
             foreach (var h in heights)
                 Console.WriteLine("({0}) Height of rectangle:\t{1}",count++, h);
+
+            Console.ReadKey();
         }
     }
 }
